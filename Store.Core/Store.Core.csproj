@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Entities\" />
     <Folder Include="Servecies.Contract\" />
     <Folder Include="Repositories.Contract\" />
   </ItemGroup>
