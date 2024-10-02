@@ -17,6 +17,7 @@ namespace Store.Repository.Data.Contexts
         }
 
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
