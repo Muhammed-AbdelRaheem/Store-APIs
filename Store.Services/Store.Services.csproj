@@ -10,8 +10,4 @@
     <ProjectReference Include="..\Store.Repository\Store.Repository.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Servecies\" />
-  </ItemGroup>
-
 </Project>
