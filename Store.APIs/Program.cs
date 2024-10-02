@@ -1,7 +1,12 @@
 
 using Microsoft.EntityFrameworkCore;
+using Store.Core.Mapping.Products;
+using Store.Core.Repositories.Contract;
+using Store.Core.Servecies.Contract;
 using Store.Repository.Data;
 using Store.Repository.Data.Contexts;
+using Store.Repository.Repositories;
+using Store.Services.Servecies;
 
 namespace Store.APIs
 {
@@ -19,6 +24,10 @@ namespace Store.APIs
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddDbContext<StoreDbContext>(Options => Options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            builder.Services.AddScoped<IProductService, ProductService>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddAutoMapper(typeof(ProductProfile));
 
             var app = builder.Build();
 
