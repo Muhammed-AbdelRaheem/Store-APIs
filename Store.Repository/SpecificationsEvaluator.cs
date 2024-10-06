@@ -11,7 +11,7 @@ namespace Store.Repository
 {
     public static class SpecificationsEvaluator<TEntity, TKey> where TEntity : BaseEntity<TKey>
     {
-
+        //Create And Return
         public static IQueryable<TEntity> GetQuery(IQueryable<TEntity> inputQuery ,ISpecifications<TEntity,TKey> spec)
         {
             var query = inputQuery;
@@ -22,7 +22,7 @@ namespace Store.Repository
 
             }
 
-          query=  spec.Includes.Aggregate(query, (currentQuery, includeExpression) => currentQuery.Include(includeExpression));
+          query =  spec.Includes.Aggregate(query, (currentQuery, includeExpression) => currentQuery.Include(includeExpression));
 
             return query;
 
