@@ -1,5 +1,6 @@
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Store.Core.Mapping.Products;
 using Store.Core.Repositories.Contract;
 using Store.Core.Servecies.Contract;
@@ -28,7 +29,7 @@ namespace Store.APIs
             builder.Services.AddDbContext<StoreDbContext>(Options => Options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-            builder.Services.AddAutoMapper(typeof(ProductProfile)); 
+            builder.Services.AddAutoMapper(M=>M.AddProfile  (new ProductProfile(builder.Configuration)) ); 
 
 
             #endregion
@@ -55,9 +56,11 @@ namespace Store.APIs
 
                 var logger = loggerFactory.CreateLogger<Program>();
                 logger.LogError(ex, "There Are Problems During Appling Migrations");
-            } 
+            }
             #endregion
 
+
+            app.UseStaticFiles();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
