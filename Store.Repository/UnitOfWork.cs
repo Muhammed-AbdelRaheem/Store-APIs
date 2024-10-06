@@ -1,6 +1,7 @@
 ﻿using Store.Core.Entities;
 using Store.Core.Repositories.Contract;
 using Store.Repository.Data.Contexts;
+using Store.Repository.Repositories;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Store.Repository.Repositories
+namespace Store.Repository
 {
     public class UnitOfWork : IUnitOfWork
     {
