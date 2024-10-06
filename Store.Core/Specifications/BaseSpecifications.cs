@@ -21,6 +21,10 @@ namespace Store.Core.Specifications
 
             
         }
+        public BaseSpecifications()
+        {
+            
+        }
     }
 
     
