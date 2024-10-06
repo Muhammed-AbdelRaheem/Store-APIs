@@ -23,14 +23,19 @@ namespace Store.APIs
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddDbContext<StoreDbContext>(Options => Options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            #region Configurations
 
+            builder.Services.AddDbContext<StoreDbContext>(Options => Options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-            builder.Services.AddAutoMapper(typeof(ProductProfile));
+            builder.Services.AddAutoMapper(typeof(ProductProfile)); 
+
+
+            #endregion
 
             var app = builder.Build();
 
+            #region UpdateDataBase / Seed
 
             using var scope = app.Services.CreateScope();
 
@@ -48,9 +53,10 @@ namespace Store.APIs
             catch (Exception ex)
             {
 
-              var logger = loggerFactory.CreateLogger<Program>();
+                var logger = loggerFactory.CreateLogger<Program>();
                 logger.LogError(ex, "There Are Problems During Appling Migrations");
-            }
+            } 
+            #endregion
 
 
             // Configure the HTTP request pipeline.

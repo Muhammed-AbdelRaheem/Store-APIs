@@ -11,10 +11,9 @@ namespace Store.Core.Servecies.Contract
     {
 
        Task<IEnumerable<ProductDto>> GetAllProductsAsync();
-        Task<IEnumerable<TypeBrandDto>> GetAllTypesAsync();
-        Task<IEnumerable<TypeBrandDto>> GetAllBrandsAsync();
-
-        Task<ProductDto> GetProductById(int id);
+       Task<IEnumerable<TypeBrandDto>> GetAllTypesAsync();
+       Task<IEnumerable<TypeBrandDto>> GetAllBrandsAsync();
+       Task<ProductDto> GetProductById(int id);
 
 
     }

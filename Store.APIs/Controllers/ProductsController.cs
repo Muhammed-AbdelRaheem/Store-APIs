@@ -22,6 +22,7 @@ namespace Store.APIs.Controllers
             return Ok(result);
         }
 
+
         [HttpGet("Brands")]
         public async Task<IActionResult> GetAllBrands()
         {
