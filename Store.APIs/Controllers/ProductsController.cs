@@ -15,10 +15,12 @@ namespace Store.APIs.Controllers
             _productService = productService;
         }
 
+
+
         [HttpGet]
-        public async Task<IActionResult> GetAllProducts()
+        public async Task<IActionResult> GetAllProducts([FromQuery]string? sort)
         {
-            var result = await _productService.GetAllProductsAsync();
+            var result = await _productService.GetAllProductsAsync(sort);
             return Ok(result);
         }
 

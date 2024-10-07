@@ -25,7 +25,7 @@ namespace Store.Repository.Repositories
         {
             if (typeof(TEntity)==typeof(Product))
             {
-              return (IEnumerable<TEntity>)  await _context.Products.Include(P=>P.Brand).Include(P => P.Type).ToListAsync();
+              return (IEnumerable<TEntity>)  await _context.Products.OrderBy(P=>P.Name).Include(P=>P.Brand).Include(P => P.Type).ToListAsync();
 
             }
 

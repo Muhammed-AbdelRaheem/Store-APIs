@@ -15,16 +15,43 @@ namespace Store.Core.Specifications.Products
             ApplyIncludes();
         }
 
-        public ProductSpecification()
+        public ProductSpecification(string? sort)
         {
+            if (!string.IsNullOrEmpty(sort))
+            {
+                switch (sort)
+                {
+
+                    case "priceAsc":
+                        AddOrderBy(P => P.Price );
+                        break;
+                    case "priceDesc":
+                        AddOrderByDesc(P=>P.Price);
+                        break;
+
+                    default:
+                        AddOrderBy(P => P.Name)  ; 
+                        break;
+
+                }
+
+            }
+            else
+            {
+                AddOrderBy(P => P.Name)  ;
+
+            }
+
+
             ApplyIncludes();
+
 
         }
 
 
         private void ApplyIncludes()
         {
-            Includes.Add(P=>P.Brand);
+            Includes.Add(P => P.Brand);
             Includes.Add(P => P.Type);
 
         }

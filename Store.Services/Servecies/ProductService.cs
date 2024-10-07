@@ -24,14 +24,14 @@ namespace Store.Services.Servecies
         }
 
 
-        public async Task<IEnumerable<ProductDto>> GetAllProductsAsync()
+        public async Task<IEnumerable<ProductDto>> GetAllProductsAsync(string? sort)
         {
-            var spec = new ProductSpecification();
+            var spec = new ProductSpecification(sort);
             var AllProducts = await _unitOfWork.Repository<Product, int>().GetAllWithSpecAsync(spec);
             var mappedProducts = _mapper.Map<IEnumerable<ProductDto>>(AllProducts);
             return mappedProducts;
         }
-
+         
 
         public async Task<ProductDto> GetProductById(int id)
         {
