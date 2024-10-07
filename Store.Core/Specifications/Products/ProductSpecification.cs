@@ -15,18 +15,18 @@ namespace Store.Core.Specifications.Products
             ApplyIncludes();
         }
 
-        public ProductSpecification(string? sort, int? brandId, int? typeId) : base(
+        public ProductSpecification(ProductSpecParams productSpec) : base(
 
             P =>
-            (!brandId.HasValue || brandId == P.BrandId)
+            (!productSpec.brandId.HasValue || productSpec.brandId == P.BrandId)
             &&
-            (!typeId.HasValue || typeId == P.TypeId)
+            (!productSpec.typeId.HasValue || productSpec.typeId == P.TypeId)
 
                                                                                   )
         {
-            if (!string.IsNullOrEmpty(sort))
+            if (!string.IsNullOrEmpty(productSpec.sort))
             {
-                switch (sort)
+                switch (productSpec.sort)
                 {
 
                     case "priceAsc":
@@ -51,6 +51,9 @@ namespace Store.Core.Specifications.Products
 
 
             ApplyIncludes();
+
+
+            ApplyPagination(productSpec.pageSize * (productSpec.pageIndex - 1), productSpec.pageSize);
 
 
         }

@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Store.Core.Dtos;
+using Store.Core.Helper;
 using Store.Core.Servecies.Contract;
+using Store.Core.Specifications.Products;
 
 namespace Store.APIs.Controllers
 {
@@ -18,9 +21,9 @@ namespace Store.APIs.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> GetAllProducts([FromQuery]string? sort , [FromQuery]int? brandId , [FromQuery] int? typeId)
+        public async Task<IActionResult> GetAllProducts([FromQuery] ProductSpecParams productSpec)
         {
-            var result = await _productService.GetAllProductsAsync(sort, brandId ,  typeId);
+            var result = await _productService.GetAllProductsAsync(productSpec);
             return Ok(result);
         }
 
@@ -48,7 +51,7 @@ namespace Store.APIs.Controllers
             {
                 BadRequest("Invalid Id !!");
             }
-            var result = await _productService.GetProductById(id.Value );
+            var result = await _productService.GetProductById(id.Value);
 
             if (result is null)
             {

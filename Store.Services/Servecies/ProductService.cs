@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Store.Core.Dtos;
 using Store.Core.Entities;
+using Store.Core.Helper;
 using Store.Core.Repositories.Contract;
 using Store.Core.Servecies.Contract;
 using Store.Core.Specifications.Products;
@@ -24,12 +25,15 @@ namespace Store.Services.Servecies
         }
 
 
-        public async Task<IEnumerable<ProductDto>> GetAllProductsAsync(string? sort , int? brandId,  int? typeId)
+        public async Task<PaginationResponse<ProductDto>> GetAllProductsAsync(ProductSpecParams productSpec)
         {
-            var spec = new ProductSpecification(sort ,brandId,typeId);
+            var spec = new ProductSpecification(productSpec);
             var AllProducts = await _unitOfWork.Repository<Product, int>().GetAllWithSpecAsync(spec);
             var mappedProducts = _mapper.Map<IEnumerable<ProductDto>>(AllProducts);
-            return mappedProducts;
+            var countSpec = new ProductCountSpecification(productSpec);
+            var count = await _unitOfWork.Repository<Product, int>().GetCountAsync(countSpec);
+
+            return new PaginationResponse<ProductDto>(productSpec.pageSize, productSpec.pageIndex, count, mappedProducts);
         }
          
 

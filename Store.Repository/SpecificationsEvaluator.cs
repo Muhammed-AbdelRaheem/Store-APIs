@@ -22,14 +22,19 @@ namespace Store.Repository
             }
 
             if (spec.OrderBy is not null)
-            { 
+            {
                 query = query.OrderBy(spec.OrderBy);
             }
 
 
             if (spec.OrderByDescending is not null)
             {
-                query = query.OrderByDescending(spec.OrderByDescending); 
+                query = query.OrderByDescending(spec.OrderByDescending);
+            }
+            if (spec.IsPaginationEnabled)
+            {
+                query = query.Skip(spec.Skip).Take(spec.Take);
+
             }
 
 
