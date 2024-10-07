@@ -8,6 +8,16 @@ namespace Store.Core.Specifications.Products
 {
     public class ProductSpecParams
     {
+
+        private string? search;
+
+        public string? Search
+        {
+            get { return search; }
+            set { search = value?.ToLower(); }
+        }
+
+
         public string? sort{get;set;}
 
         public int? brandId{get;set;}
