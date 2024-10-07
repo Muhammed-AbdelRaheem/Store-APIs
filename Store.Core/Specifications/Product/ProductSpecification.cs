@@ -15,7 +15,14 @@ namespace Store.Core.Specifications.Products
             ApplyIncludes();
         }
 
-        public ProductSpecification(string? sort)
+        public ProductSpecification(string? sort, int? brandId, int? typeId) : base(
+
+            P =>
+            (!brandId.HasValue || brandId == P.BrandId)
+            &&
+            (!typeId.HasValue || typeId == P.TypeId)
+
+                                                                                  )
         {
             if (!string.IsNullOrEmpty(sort))
             {
@@ -23,14 +30,14 @@ namespace Store.Core.Specifications.Products
                 {
 
                     case "priceAsc":
-                        AddOrderBy(P => P.Price );
+                        AddOrderBy(P => P.Price);
                         break;
                     case "priceDesc":
-                        AddOrderByDesc(P=>P.Price);
+                        AddOrderByDesc(P => P.Price);
                         break;
 
                     default:
-                        AddOrderBy(P => P.Name)  ; 
+                        AddOrderBy(P => P.Name);
                         break;
 
                 }
@@ -38,7 +45,7 @@ namespace Store.Core.Specifications.Products
             }
             else
             {
-                AddOrderBy(P => P.Name)  ;
+                AddOrderBy(P => P.Name);
 
             }
 
