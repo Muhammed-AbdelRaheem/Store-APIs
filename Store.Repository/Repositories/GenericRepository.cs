@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Store.Core.Entities;
 using Store.Core.Repositories.Contract;
+using Store.Core.Specifications;
 using Store.Repository.Data.Contexts;
 using System;
 using System.Collections.Generic;
@@ -24,7 +25,7 @@ namespace Store.Repository.Repositories
         {
             if (typeof(TEntity)==typeof(Product))
             {
-              return (IEnumerable<TEntity>)  await _context.Products.Include(P=>P.Brand).Include(P => P.Type).ToListAsync();
+              return (IEnumerable<TEntity>)  await _context.Products.OrderBy(P=>P.Name).Include(P=>P.Brand).Include(P => P.Type).ToListAsync();
 
             }
 
@@ -36,7 +37,7 @@ namespace Store.Repository.Repositories
         {
             if (typeof(TEntity) == typeof(Product))
             {
-                return  await _context.Products.Include(P => P.Brand).Include(P => P.Type).FirstOrDefaultAsync(P=>P.Id == Id as int?)as TEntity;
+                return  await _context.Products.Where(P => P.Id == Id as int?).Include(P => P.Brand).Include(P => P.Type).FirstOrDefaultAsync()as TEntity;
 
             }
 
@@ -57,8 +58,29 @@ namespace Store.Repository.Repositories
             _context.Remove(entity);
         }
 
+        public async Task<IEnumerable<TEntity>> GetAllWithSpecAsync(ISpecifications<TEntity, TKey> spec)
+        {
+
+            return await ApplySpecification(spec).ToListAsync();
+
+        }
+
+        public async Task<TEntity> GetWithSpecAsync(ISpecifications<TEntity, TKey> spec)
+        {
+            return await ApplySpecification(spec).FirstOrDefaultAsync();  
+
+        }
 
 
+        private IQueryable<TEntity> ApplySpecification( ISpecifications<TEntity,TKey> spec)
+        {
+            return SpecificationsEvaluator<TEntity, TKey>.GetQuery(_context.Set<TEntity>(), spec);
+        }
 
+        public async Task<int> GetCountAsync(ISpecifications<TEntity, TKey> spec)
+        {
+            return await  ApplySpecification(spec).CountAsync();
+            
+        }
     }
 }

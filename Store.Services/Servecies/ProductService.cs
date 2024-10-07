@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Store.Core.Dtos;
 using Store.Core.Entities;
+using Store.Core.Helper;
 using Store.Core.Repositories.Contract;
 using Store.Core.Servecies.Contract;
+using Store.Core.Specifications.Products;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,12 +25,31 @@ namespace Store.Services.Servecies
         }
 
 
-        public async Task<IEnumerable<ProductDto>> GetAllProductsAsync()
+        public async Task<PaginationResponse<ProductDto>> GetAllProductsAsync(ProductSpecParams productSpec)
         {
-            var AllProducts = await _unitOfWork.Repository<Product, int>().GetAllAsync();
+            var spec = new ProductSpecification(productSpec);
+            var AllProducts = await _unitOfWork.Repository<Product, int>().GetAllWithSpecAsync(spec);
             var mappedProducts = _mapper.Map<IEnumerable<ProductDto>>(AllProducts);
-            return mappedProducts;
+            var countSpec = new ProductCountSpecification(productSpec);
+            var count = await _unitOfWork.Repository<Product, int>().GetCountAsync(countSpec);
+
+            return new PaginationResponse<ProductDto>(productSpec.pageSize, productSpec.pageIndex, count, mappedProducts);
         }
+         
+
+        public async Task<ProductDto> GetProductById(int id)
+        {
+            var spec = new ProductSpecification(id);
+
+            var ProductId = await _unitOfWork.Repository<Product, int>().GetWithSpecAsync(spec);
+            var mappedProductId = _mapper.Map<ProductDto>(ProductId);
+            return mappedProductId;
+
+
+
+        }
+
+
         public async Task<IEnumerable<TypeBrandDto>> GetAllTypesAsync()
         {
             var AllTypes = await _unitOfWork.Repository<ProductType, int>().GetAllAsync();
@@ -43,16 +64,7 @@ namespace Store.Services.Servecies
         }
 
 
-
-        public async Task<ProductDto> GetProductById(int id)
-        {
-            var ProductId = await _unitOfWork.Repository<Product, int>().GetAsync(id);
-            var mappedProductId = _mapper.Map<ProductDto>(ProductId);
-            return mappedProductId;
-
-
-
-        }
+      
 
 
 

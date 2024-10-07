@@ -1,11 +1,12 @@
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Store.Core.Mapping.Products;
 using Store.Core.Repositories.Contract;
 using Store.Core.Servecies.Contract;
+using Store.Repository;
 using Store.Repository.Data;
 using Store.Repository.Data.Contexts;
-using Store.Repository.Repositories;
 using Store.Services.Servecies;
 
 namespace Store.APIs
@@ -23,14 +24,19 @@ namespace Store.APIs
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddDbContext<StoreDbContext>(Options => Options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            #region Configurations
 
+            builder.Services.AddDbContext<StoreDbContext>(Options => Options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-            builder.Services.AddAutoMapper(typeof(ProductProfile));
+            builder.Services.AddAutoMapper(M=>M.AddProfile  (new ProductProfile(builder.Configuration)) ); 
+
+
+            #endregion
 
             var app = builder.Build();
 
+            #region UpdateDataBase / Seed
 
             using var scope = app.Services.CreateScope();
 
@@ -48,10 +54,13 @@ namespace Store.APIs
             catch (Exception ex)
             {
 
-              var logger = loggerFactory.CreateLogger<Program>();
+                var logger = loggerFactory.CreateLogger<Program>();
                 logger.LogError(ex, "There Are Problems During Appling Migrations");
             }
+            #endregion
 
+
+            app.UseStaticFiles();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
