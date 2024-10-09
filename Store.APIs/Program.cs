@@ -1,6 +1,9 @@
 
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Store.APIs.Errors;
 using Store.Core.Mapping.Products;
 using Store.Core.Repositories.Contract;
 using Store.Core.Servecies.Contract;
@@ -29,7 +32,31 @@ namespace Store.APIs
             builder.Services.AddDbContext<StoreDbContext>(Options => Options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-            builder.Services.AddAutoMapper(M=>M.AddProfile  (new ProductProfile(builder.Configuration)) ); 
+            builder.Services.AddAutoMapper(M => M.AddProfile(new ProductProfile(builder.Configuration)));
+         
+            
+            builder.Services.Configure<ApiBehaviorOptions>(Options =>
+            {
+                Options.InvalidModelStateResponseFactory = (actionContext) =>
+                {
+
+                    var errors = actionContext.ModelState.Where(P => P.Value.Errors.Count() > 0)
+                                               .SelectMany(P => P.Value.Errors)
+                                               .Select(E => E.ErrorMessage)
+                                               .ToArray();
+                    var response = new ApiValidationErrorResponse()
+                    {
+                        Errors = errors
+
+                    };
+
+                    return new BadRequestObjectResult(response);
+                };
+
+
+            }
+            );
+
 
 
             #endregion

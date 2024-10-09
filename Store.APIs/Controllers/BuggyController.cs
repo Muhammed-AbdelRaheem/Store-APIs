@@ -20,7 +20,7 @@ namespace Store.APIs.Controllers
 
 
         [HttpGet("notfound")]
-        public async Task<IActionResult> GetNotFoundRequestError()
+        public async Task<IActionResult> GetNotFoundRequestError() //NotFound Error
         {
             var brand =await _context.Brands.FindAsync(100);
 
@@ -30,21 +30,15 @@ namespace Store.APIs.Controllers
         }
 
 
-     
-
         [HttpGet("badrequest")]
-        public  IActionResult GetBadRequestError()
+        public IActionResult GetBadRequestError() //BadRequest Error
         {
             return BadRequest(new ApiErrorResponse(400));
+            
         }
 
-
-
-      
-
-
         [HttpGet("unauthorized")]
-        public  IActionResult GetUnAuthorizedError() //UnAuthorizedError 
+        public  IActionResult GetUnAuthorizedError() //UnAuthorized Error 
         {
 
             return Unauthorized(new ApiErrorResponse(401));
@@ -55,7 +49,7 @@ namespace Store.APIs.Controllers
 
 
         [HttpGet("servererror")]
-        public async Task<IActionResult> GetServerError()
+        public async Task<IActionResult> GetServerError() //Server Error
         {
             var brand = await _context.Brands.FindAsync(100);
 
@@ -65,7 +59,7 @@ namespace Store.APIs.Controllers
         }
 
         [HttpGet("badrequest/{id}")]
-        public IActionResult GetBadRequestError(int id) //ValidationError 
+        public IActionResult GetBadRequestError(int id) //Validation Error 
         {
 
             return Ok();
