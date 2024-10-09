@@ -7,7 +7,7 @@ namespace Store.APIs.Controllers
     [Route("Error/{code}")]
     [ApiController]
     [ApiExplorerSettings(IgnoreApi =true)]
-    public class ErrorsController : ControllerBase
+    public class ErrorsController : BaseApiController
     {
 
         public IActionResult Error(int code)
