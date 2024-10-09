@@ -1,6 +1,7 @@
-@Store.APIs_HostAddress = http://localhost:5234
+@Store.APIs_HostAddress = https://localhost:7104/
 
-GET {{Store.APIs_HostAddress}}/weatherforecast/
+GET {{Store.APIs_HostAddress}}api/Products
+
 Accept: application/json
 
 ###

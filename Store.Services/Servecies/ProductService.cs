@@ -33,7 +33,7 @@ namespace Store.Services.Servecies
             var countSpec = new ProductCountSpecification(productSpec);
             var count = await _unitOfWork.Repository<Product, int>().GetCountAsync(countSpec);
 
-            return new PaginationResponse<ProductDto>(productSpec.pageSize, productSpec.pageIndex, count, mappedProducts);
+            return new PaginationResponse<ProductDto>(productSpec.PageSize, productSpec.pageIndex, count, mappedProducts);
         }
          
 

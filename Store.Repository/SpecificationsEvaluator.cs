@@ -20,6 +20,10 @@ namespace Store.Repository
             {
                 query = query.Where(spec.Criteria);
             }
+            query = spec.Includes.Aggregate(query, (currentQuery, includeExpression) => currentQuery.Include(includeExpression));
+
+
+
 
             if (spec.OrderBy is not null)
             {
@@ -38,7 +42,6 @@ namespace Store.Repository
             }
 
 
-            query = spec.Includes.Aggregate(query, (currentQuery, includeExpression) => currentQuery.Include(includeExpression));
 
             return query;
 

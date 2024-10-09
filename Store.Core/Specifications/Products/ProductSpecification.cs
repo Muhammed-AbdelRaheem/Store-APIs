@@ -49,14 +49,12 @@ namespace Store.Core.Specifications.Products
             {
                 AddOrderBy(P => P.Name);
 
-            }
+            } 
 
+
+            ApplyPagination(productSpec.PageSize * (productSpec.pageIndex - 1), productSpec.PageSize);
 
             ApplyIncludes();
-
-
-            ApplyPagination(productSpec.pageSize * (productSpec.pageIndex - 1), productSpec.pageSize);
-
 
         }
 

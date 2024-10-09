@@ -41,7 +41,6 @@ namespace Store.Core.Specifications
             OrderByDescending = expression;
 
         }
-
         public void ApplyPagination(int skip,int take)
         {
             IsPaginationEnabled = true;
