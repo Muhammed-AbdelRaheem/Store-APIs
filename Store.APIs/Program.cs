@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Store.APIs.Errors;
+using Store.APIs.Middlewares;
 using Store.Core.Mapping.Products;
 using Store.Core.Repositories.Contract;
 using Store.Core.Servecies.Contract;
@@ -75,7 +76,7 @@ namespace Store.APIs
             try
             {
                 await context.Database.MigrateAsync();
-                await StoreDbContextSeed.SeedAsync(context);
+                await StoreDbContextSeed.SeedAsync(context); 
 
             }
             catch (Exception ex)
@@ -86,6 +87,10 @@ namespace Store.APIs
             }
             #endregion
 
+
+
+
+            app.UseMiddleware<ExceptionMiddleware>();
 
             app.UseStaticFiles();
 
