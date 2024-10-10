@@ -23,7 +23,7 @@ namespace Store.Repository.Repositories
             return await _database.KeyDeleteAsync(Id);
         }
 
-        public async Task<CustomerBasket?> GetBasketAsync(string Id)
+        public async Task<CustomerBasket?> GetBasketAsync(string Id) 
         {
             var basket= await _database.StringGetAsync(Id);
             return basket.IsNullOrEmpty?null:JsonSerializer.Deserialize<CustomerBasket>(basket);

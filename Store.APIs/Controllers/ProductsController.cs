@@ -52,11 +52,9 @@ namespace Store.APIs.Controllers
 
 
 
-        [ProducesResponseType(typeof(TypeBrandDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProductDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ApiErrorResponse), StatusCodes.Status404NotFound)]
-
-
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetProductById(int? id)
