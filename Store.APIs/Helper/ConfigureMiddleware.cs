@@ -2,6 +2,10 @@
 using Store.Repository.Data.Contexts;
 using Store.Repository.Data;
 using Microsoft.EntityFrameworkCore;
+using Store.Repository.Identity.Contexts;
+using Store.Repository.Identity.DataSeed;
+using Microsoft.AspNetCore.Identity;
+using Store.Core.Entities.Identity;
 
 namespace Store.APIs.Helper
 {
@@ -14,13 +18,17 @@ namespace Store.APIs.Helper
 
             var service = scope.ServiceProvider;
             var context = service.GetRequiredService<StoreDbContext>();
+            var Identitycontext = service.GetRequiredService<StoreIdentityDbContext>();
+            var userManger = service.GetRequiredService<UserManager<AppUser>>();
             var loggerFactory = service.GetRequiredService<ILoggerFactory>();
 
 
             try
             {
                 await context.Database.MigrateAsync();
+                await Identitycontext.Database.MigrateAsync();
                 await StoreDbContextSeed.SeedAsync(context);
+                await StoreIdentityDbContextSeed.SeedAppUserAsync(userManger);
 
             }
             catch (Exception ex)
@@ -42,7 +50,7 @@ namespace Store.APIs.Helper
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
-                app.UseSwaggerUI();
+                 app.UseSwaggerUI();
             }
 
             app.UseStatusCodePagesWithReExecute("/Error/{0}");

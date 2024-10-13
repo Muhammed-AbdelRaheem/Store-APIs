@@ -1,13 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
 using Store.APIs.Errors;
+using Store.Core.Entities.Identity;
 using Store.Core.Mapping.Basket;
 using Store.Core.Mapping.Products;
 using Store.Core.Repositories.Contract;
 using Store.Core.Servecies.Contract;
 using Store.Repository;
 using Store.Repository.Data.Contexts;
+using Store.Repository.Identity.Contexts;
 using Store.Repository.Repositories;
 using Store.Services.Servecies;
 
@@ -26,6 +29,9 @@ namespace Store.APIs.Helper
             services.AddAutoMapperService(configuration);
             services.ConfigureInvalidModelStateResponseService();
             services.AddRedisService(configuration);
+            services.AddIdentityService();
+
+
             return services;
 
 
@@ -53,6 +59,8 @@ namespace Store.APIs.Helper
 
             services.AddDbContext<StoreDbContext>(Options => Options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddDbContext<StoreIdentityDbContext>(Options => Options.UseSqlServer(configuration.GetConnectionString("IdentityConnection")));
+
             return services;
 
         }
@@ -65,7 +73,6 @@ namespace Store.APIs.Helper
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IBasketRepository, BasketRepository>();
             services.AddScoped<ICacheService, CacheService>();
-
             return services;
 
         }
@@ -121,6 +128,16 @@ namespace Store.APIs.Helper
 
                 return ConnectionMultiplexer.Connect(connection);
             });
+
+            return services;
+
+        }
+
+        private static IServiceCollection AddIdentityService(this IServiceCollection services)
+        {
+
+            services.AddIdentity<AppUser, IdentityRole>()
+                     .AddEntityFrameworkStores<StoreIdentityDbContext>();
 
             return services;
 

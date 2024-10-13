@@ -11,7 +11,7 @@ namespace Store.Repository.Data.Contexts
 {
     public class StoreDbContext:DbContext
     {
-        public StoreDbContext(DbContextOptions Options):base(Options)
+        public StoreDbContext(DbContextOptions<StoreDbContext> Options):base(Options)
         {
             
         }
