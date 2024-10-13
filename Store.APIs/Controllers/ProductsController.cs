@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Store.APIs.Attributes;
 using Store.APIs.Errors;
@@ -9,6 +10,7 @@ using Store.Core.Specifications.Products;
 
 namespace Store.APIs.Controllers
 {
+    [Authorize]
 
     public class ProductsController : BaseApiController
     {

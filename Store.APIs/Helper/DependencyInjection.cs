@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using StackExchange.Redis;
 using Store.APIs.Errors;
 using Store.Core.Entities.Identity;
@@ -13,6 +16,7 @@ using Store.Repository.Data.Contexts;
 using Store.Repository.Identity.Contexts;
 using Store.Repository.Repositories;
 using Store.Services.Servecies;
+using System.Text;
 
 namespace Store.APIs.Helper
 {
@@ -30,7 +34,7 @@ namespace Store.APIs.Helper
             services.ConfigureInvalidModelStateResponseService();
             services.AddRedisService(configuration);
             services.AddIdentityService();
-
+            services.AddAuthService(configuration);
 
             return services;
 
@@ -40,7 +44,7 @@ namespace Store.APIs.Helper
         private static IServiceCollection AddBuiltInService(this IServiceCollection services)
         {
 
-            services.AddControllers();  
+            services.AddControllers();
             return services;
 
         }
@@ -54,7 +58,7 @@ namespace Store.APIs.Helper
             return services;
 
         }
-        private static IServiceCollection AddDbContextService(this IServiceCollection services ,IConfiguration configuration)
+        private static IServiceCollection AddDbContextService(this IServiceCollection services, IConfiguration configuration)
         {
 
             services.AddDbContext<StoreDbContext>(Options => Options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
@@ -87,7 +91,7 @@ namespace Store.APIs.Helper
             services.AddAutoMapper(M => M.AddProfile(new ProductProfile(configuration)));
             services.AddAutoMapper(M => M.AddProfile(typeof(BasketProfile)));
 
-            return services; 
+            return services;
 
         }
 
@@ -128,7 +132,7 @@ namespace Store.APIs.Helper
 
             services.AddSingleton<IConnectionMultiplexer>((serviceProvider) =>
             {
-              var connection=  configuration.GetConnectionString("Redis");
+                var connection = configuration.GetConnectionString("Redis");
 
                 return ConnectionMultiplexer.Connect(connection);
             });
@@ -142,6 +146,35 @@ namespace Store.APIs.Helper
 
             services.AddIdentity<AppUser, IdentityRole>()
                      .AddEntityFrameworkStores<StoreIdentityDbContext>();
+
+            return services;
+
+        }
+
+        private static IServiceCollection AddAuthService(this IServiceCollection services, IConfiguration configuration)
+        {
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+
+                    ValidateIssuer= true,
+                    ValidIssuer = configuration["JWT:Issure"],
+                    ValidateAudience=true,
+                    ValidAudience = configuration["JWT:Audience"],
+                    ValidateLifetime=true,
+                    ValidateIssuerSigningKey=true,
+                    IssuerSigningKey=new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Key"]))
+
+
+
+                };
+            });
 
             return services;
 

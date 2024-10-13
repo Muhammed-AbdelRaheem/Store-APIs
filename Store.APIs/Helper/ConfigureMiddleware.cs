@@ -57,6 +57,7 @@ namespace Store.APIs.Helper
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
 
