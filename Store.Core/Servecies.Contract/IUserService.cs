@@ -11,8 +11,8 @@ namespace Store.Core.Servecies.Contract
 {
     public interface IUserService
     {
-        Task<UserDto> LoginAsynce(LoginDto loginDto);
-        Task<UserDto> RegisterAsynce(RegisterDto registerDto);
+        Task<UserDto> LoginAsync(LoginDto loginDto);
+        Task<UserDto> RegisterAsync(RegisterDto registerDto);
 
         Task<bool>CheckEmailExistAsync(string email);
 

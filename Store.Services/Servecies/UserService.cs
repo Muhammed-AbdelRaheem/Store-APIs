@@ -26,7 +26,7 @@ namespace Store.Services.Servecies
         }
 
 
-        public async Task<UserDto> LoginAsynce(LoginDto loginDto)
+        public async Task<UserDto> LoginAsync(LoginDto loginDto)
         {
 
             var user = await _userManager.FindByEmailAsync(loginDto.Email);
@@ -38,8 +38,8 @@ namespace Store.Services.Servecies
             if (!result.Succeeded) return null;
             return new UserDto()
             {
-                Email = user.Email,
                 DisplayName = user.DisplayName,
+                Email = user.Email,
                 Token = await _tokenService.CreateTokenAsync(user, _userManager)
 
 
@@ -47,7 +47,7 @@ namespace Store.Services.Servecies
 
         }
 
-        public async Task<UserDto> RegisterAsynce(RegisterDto registerDto)
+        public async Task<UserDto> RegisterAsync(RegisterDto registerDto)
         {
             if (await CheckEmailExistAsync(registerDto.Email)) return null;
 
