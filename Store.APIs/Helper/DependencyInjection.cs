@@ -64,6 +64,7 @@ namespace Store.APIs.Helper
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IBasketRepository, BasketRepository>();
+            services.AddScoped<ICacheService, CacheService>();
 
             return services;
 

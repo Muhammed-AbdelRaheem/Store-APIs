@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Store.APIs.Attributes;
 using Store.APIs.Errors;
 using Store.Core.Dtos;
 using Store.Core.Helper;
@@ -23,6 +24,7 @@ namespace Store.APIs.Controllers
 
         [ProducesResponseType(typeof(PaginationResponse<ProductDto>),StatusCodes.Status200OK)]
         [HttpGet]
+        [Cached(100)]
         public async Task<ActionResult<PaginationResponse<ProductDto>>> GetAllProducts([FromQuery] ProductSpecParams productSpec)
         {
             var result = await _productService.GetAllProductsAsync(productSpec);
