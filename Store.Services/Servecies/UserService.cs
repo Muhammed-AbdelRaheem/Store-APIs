@@ -44,12 +44,40 @@ namespace Store.Services.Servecies
 
 
             };
-             
+
         }
 
-        public Task<UserDto> RegisterAsynce(RegisterDto registerDto)
+        public async Task<UserDto> RegisterAsynce(RegisterDto registerDto)
         {
-            throw new NotImplementedException();
+            if (await CheckEmailExistAsync(registerDto.Email)) return null;
+
+            var user = new AppUser()
+            {
+                Email = registerDto.Email,
+                DisplayName = registerDto.DisplayName,
+                PhoneNumber = registerDto.PhoneNumber,
+                UserName = registerDto.Email.Split("@")[0],
+            };
+
+
+            var result = await _userManager.CreateAsync(user, registerDto.Password);
+
+            if (!result.Succeeded) return null;
+            return new UserDto()
+            {
+                Email = user.Email,
+                DisplayName = user.DisplayName,
+                Token = await _tokenService.CreateTokenAsync(user, _userManager)
+
+            };
+
+        }
+
+
+
+        public async Task<bool> CheckEmailExistAsync(string email)
+        {
+            return await _userManager.FindByEmailAsync(email) is not null;
         }
     }
 }

@@ -14,6 +14,8 @@ namespace Store.Core.Servecies.Contract
         Task<UserDto> LoginAsynce(LoginDto loginDto);
         Task<UserDto> RegisterAsynce(RegisterDto registerDto);
 
+        Task<bool>CheckEmailExistAsync(string email);
+
 
     }
 }
