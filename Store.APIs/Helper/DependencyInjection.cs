@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using StackExchange.Redis;
 using Store.APIs.Errors;
 using Store.Core.Entities.Identity;
+using Store.Core.Mapping.Auth;
 using Store.Core.Mapping.Basket;
 using Store.Core.Mapping.Products;
 using Store.Core.Repositories.Contract;
@@ -89,6 +90,7 @@ namespace Store.APIs.Helper
         {
 
             services.AddAutoMapper(M => M.AddProfile(new ProductProfile(configuration)));
+            services.AddAutoMapper(M => M.AddProfile(new AddressProfile()));
             services.AddAutoMapper(M => M.AddProfile(typeof(BasketProfile)));
 
             return services;

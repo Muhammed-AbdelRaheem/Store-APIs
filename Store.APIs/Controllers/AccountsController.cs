@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Store.APIs.Errors;
+using Store.APIs.Extensions;
 using Store.Core.Dtos.Auth;
 using Store.Core.Entities.Identity;
 using Store.Core.Servecies.Contract;
@@ -14,14 +17,17 @@ namespace Store.APIs.Controllers
     {
         private readonly IUserService _userService;
         private readonly ITokenService _tokenService;
+        private readonly IMapper _mapper;
         private readonly UserManager<AppUser> _userManager;
 
         public AccountsController(IUserService userService,
                                   UserManager<AppUser> userManager,
-                                  ITokenService tokenService)
+                                  ITokenService tokenService,
+                                  IMapper mapper)
         {
             _userService = userService;
             _tokenService = tokenService;
+            _mapper = mapper;
             _userManager = userManager;
         }
 
@@ -53,7 +59,7 @@ namespace Store.APIs.Controllers
 
 
         [HttpGet("GetCurrentUser")] // Get : /Api/Accounts/GetCurrentUser
-
+        [Authorize]
         public async Task<ActionResult<UserDto>> GetCurrentUser()
         {
             var userEmail = User.FindFirstValue(ClaimTypes.Email);
@@ -71,6 +77,23 @@ namespace Store.APIs.Controllers
 
             });
         }
+
+
+
+        [HttpGet("GetAddress")] // Get : /Api/Accounts/GetAddress
+        [Authorize]
+
+        public async Task<ActionResult<UserDto>> GetUserAddress()
+        {
+            var userEmail = User.FindFirstValue(ClaimTypes.Email);
+            if (userEmail is null) return BadRequest(new ApiErrorResponse(StatusCodes.Status400BadRequest));
+
+            var user = await _userManager.FindByEmailWithAddressAsync(User);
+            if (user is null) return BadRequest(new ApiErrorResponse(StatusCodes.Status400BadRequest));
+
+            return Ok(_mapper.Map<AddressDto>(user.Address));
+        }
+
 
 
 
