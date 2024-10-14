@@ -13,5 +13,7 @@ namespace Store.Core.Entities.Basket
         public List<BasketItem> Items { get; set; }
 
 
+
+
     }
 }
