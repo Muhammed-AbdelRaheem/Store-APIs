@@ -18,6 +18,8 @@ namespace Store.Repository.Repositories
         {
             _database = redis.GetDatabase();
         }
+
+         
         public async Task<bool> DeleteBasketAsync(string Id)
         {
             return await _database.KeyDeleteAsync(Id);
@@ -31,8 +33,9 @@ namespace Store.Repository.Repositories
 
         public async Task<CustomerBasket?> UpdateBasketAsync(CustomerBasket basket)
         {
+            var JsonBasket = JsonSerializer.Serialize(basket);
 
-           var createOrUpdateBasket=await _database.StringSetAsync(basket.Id,JsonSerializer.Serialize(basket),TimeSpan.FromDays(30));
+           var createOrUpdateBasket=await _database.StringSetAsync(basket.Id, JsonBasket, TimeSpan.FromDays(30));
             if (createOrUpdateBasket is false) return null;
 
             return await GetBasketAsync(basket.Id);

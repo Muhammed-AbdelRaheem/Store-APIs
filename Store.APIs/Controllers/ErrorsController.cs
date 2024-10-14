@@ -13,7 +13,7 @@ namespace Store.APIs.Controllers
         public IActionResult Error(int code)
         {
 
-            return NotFound(new ApiErrorResponse(StatusCodes.Status404NotFound));
+            return NotFound(new ApiErrorResponse(code));
 
         }
 
