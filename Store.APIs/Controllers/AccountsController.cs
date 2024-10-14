@@ -80,18 +80,35 @@ namespace Store.APIs.Controllers
 
 
 
-        [HttpGet("GetAddress")] // Get : /Api/Accounts/GetAddress
+        [HttpGet("Address")] // Get : /Api/Accounts/GetAddress
         [Authorize]
 
         public async Task<ActionResult<UserDto>> GetUserAddress()
         {
             var userEmail = User.FindFirstValue(ClaimTypes.Email);
-            if (userEmail is null) return BadRequest(new ApiErrorResponse(StatusCodes.Status400BadRequest));
-
             var user = await _userManager.FindByEmailWithAddressAsync(User);
-            if (user is null) return BadRequest(new ApiErrorResponse(StatusCodes.Status400BadRequest));
-
             return Ok(_mapper.Map<AddressDto>(user.Address));
+        }
+
+
+        [HttpPut("Address")] // Put : /Api/Accounts/Address
+        [Authorize]
+
+        public async Task<ActionResult<UserDto>> UpdateUserAddress(AddressDto updatedAddress)
+        {
+            var user = await _userManager.FindByEmailWithAddressAsync(User);
+            var mappedAddress = _mapper.Map<AddressDto,Address>(updatedAddress);
+
+            mappedAddress.Id = user.Address.Id;
+            user.Address = mappedAddress;
+
+          var result=  await _userManager.UpdateAsync(user);
+
+            if (!result.Succeeded)
+            {
+                return BadRequest(new ApiErrorResponse(400));
+            }
+            return Ok(updatedAddress);
         }
 
 

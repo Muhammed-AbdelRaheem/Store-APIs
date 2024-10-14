@@ -9,7 +9,7 @@ namespace Store.Core.Dtos.Auth
 {
     public class AddressDto
     {
-
+        public int Id { get; set; }
         public string Fname { get; set; }
         public string Lname { get; set; }
 
